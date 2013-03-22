@@ -208,6 +208,8 @@ class LoggableListener extends MappedEventSubscriber
     {
         $om = $ea->getObjectManager();
         $meta = $om->getClassMetadata(get_class($object));
+        $newValues = array();
+
         if ($config = $this->getConfiguration($om, $meta->name)) {
             $logEntryClass = $this->getLogEntryClass($ea, $meta->name);
             $logEntry = new $logEntryClass;
@@ -246,11 +248,9 @@ class LoggableListener extends MappedEventSubscriber
                 }
                 $logEntry->setData($newValues);
             }
-            
             if($action === self::ACTION_UPDATE && 0 === count($newValues)) {
                 return;
             }
-            
             $version = 1;
             $logEntryMeta = $om->getClassMetadata($logEntryClass);
             if ($action !== self::ACTION_CREATE) {
